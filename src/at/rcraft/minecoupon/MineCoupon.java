@@ -242,7 +242,7 @@ public class MineCoupon extends JavaPlugin {
                                 if (res.getInt(4) > System.currentTimeMillis() / 1000L){
                                     String[] commands = res.getString("command").split(";");
                                     for (i=0; i<commands.length; i++){
-                                            getServer().dispatchCommand(sender, commands[i].replaceAll("%player%", sender.getName()));
+                                            getServer().dispatchCommand(getServer().getConsoleSender(), commands[i].replaceAll("%player%", sender.getName()));
                                     }
                                     String used = res.getString(6)+sender.getName()+";";
                                     int id = res.getInt(1);

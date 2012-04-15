@@ -21,7 +21,7 @@ import org.bukkit.plugin.PluginDescriptionFile;
  *
  * @author Thomas Raith
  */
-class MineCouponListener implements Listener {
+public class MineCouponListener implements Listener {
 
     Plugin plugin;
     
