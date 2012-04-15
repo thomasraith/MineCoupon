@@ -36,7 +36,7 @@ public class MineCoupon extends JavaPlugin {
              
              stmt = (Statement) con.createStatement();
                           
-             stmt.execute("CREATE TABLE IF NOT EXISTS `minecoupon` (`ID` int(11) NOT NULL AUTO_INCREMENT,`voucher_code` varchar(200) NOT NULL,`usage_left` int(11) NOT NULL,`valid_throug` bigint(20) NOT NULL,`command` varchar(200) NOT NULL,`used_by` varchar(1000) NOT NULL DEFAULT ';',PRIMARY KEY (`ID`)) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;");
+             stmt.execute("CREATE TABLE IF NOT EXISTS `minecoupon` (`ID` int(11) NOT NULL AUTO_INCREMENT,`voucher_code` varchar(200) NOT NULL,`usage_left` int(11) NOT NULL,`valid_throug` bigint(20) NOT NULL,`command` varchar(500) NOT NULL,`used_by` varchar(1000) NOT NULL DEFAULT ';',PRIMARY KEY (`ID`)) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;");
              
              System.out.println("[MineCoupon] Connected to MySQL Database.");
          }
@@ -240,7 +240,10 @@ public class MineCoupon extends JavaPlugin {
                             }
                             if (res.getInt(3) != 0){
                                 if (res.getInt(4) > System.currentTimeMillis() / 1000L){
-                                    getServer().dispatchCommand(sender, res.getString(5));
+                                    String[] commands = res.getString("command").split(";");
+                                    for (i=0; i<commands.length; i++){
+                                            getServer().dispatchCommand(sender, commands[i].replaceAll("%player%", sender.getName()));
+                                    }
                                     String used = res.getString(6)+sender.getName()+";";
                                     int id = res.getInt(1);
                                     stmt.execute("UPDATE `minecoupon` SET `usage_left` = '"+(res.getInt(3)-1)+"' WHERE `ID` = "+id);
@@ -291,6 +294,7 @@ public class MineCoupon extends JavaPlugin {
        this.getConfig().addDefault("config.errormessages.couponnoapplications", "The maximum number of applications has been reached.");
        this.getConfig().addDefault("config.errormessages.couponnotfound", "This coupon code is invalid.");
        this.getConfig().addDefault("config.errormessages.couponused", "You have already used this coupon code.");
+       this.getConfig().addDefault("config.errormessages.nopermission", "You don't have the required permissons.");
        this.getConfig().addDefault("config.errormessages.mysqlconnection", "There is no MySQL connection.");
        this.getConfig().addDefault("config.update.message.check", "Check for updates ... ");
        this.getConfig().addDefault("config.update.message.newupdate", "A newer Version is available.");
