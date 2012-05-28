@@ -25,13 +25,28 @@ public class MineCoupon extends JavaPlugin {
  
     @Override
     public void onEnable(){
+        
+        if (this.getConfig().getBoolean("config.debug")){
+            System.out.println("[MineCoupon - DEBUG] Debug mode enabled!");
+            System.out.println("[MineCoupon - DEBUG] Loading config ...");
+        }
 
         loadConfig();
+        
+        if (this.getConfig().getBoolean("config.debug")){
+            System.out.println("[MineCoupon - DEBUG] Loading config finished.");
+        }
+
         
         System.out.println("[MineCoupon] Plugin by "+this.getDescription().getAuthors());
         
         System.out.println("[MineCoupon] Connecting to MySQL Database..."); 
-         try{
+        
+        if (this.getConfig().getBoolean("config.debug")){
+            System.out.println("[MineCoupon - DEBUG] Enable MySQL database ...");
+        }
+        
+        try{
              con = DriverManager.getConnection("jdbc:mysql://"+this.getConfig().getString("config.mysql.host")+":"+this.getConfig().getInt("config.mysql.port")+"/"+this.getConfig().getString("config.mysql.database"), this.getConfig().getString("config.mysql.username"), this.getConfig().getString("config.mysql.password"));
              
              stmt = (Statement) con.createStatement();
@@ -45,9 +60,18 @@ public class MineCoupon extends JavaPlugin {
              System.out.println("[MineCoupon] Disable MineCoupon ... ");
              
          }
+        
+        if (this.getConfig().getBoolean("config.debug")){
+            System.out.println("[MineCoupon - DEBUG] Enable Listener ...");
+        }
          
         
         getServer().getPluginManager().registerEvents(new MineCouponListener(this), this);  
+        
+        if (this.getConfig().getBoolean("config.debug")){
+            System.out.println("[MineCoupon - DEBUG] Listener enabled.");
+            System.out.println("[MineCoupon - DEBUG] Check for Plugin Metrics ...");
+        }
         
         // Metrics Plugin
         if (getConfig().getBoolean("config.allowpluginmetrics")){
@@ -63,18 +87,22 @@ public class MineCoupon extends JavaPlugin {
             System.out.println("[MineCoupon] PluginMetrics disabled.");
         }
         //Metrics Plugin
+        if (this.getConfig().getBoolean("config.debug")){
+            System.out.println("[MineCoupon - DEBUG] Check for Plugin Metrics finished.");
+            System.out.println("[MineCoupon - DEBUG] Loading finished");
+        }
     }
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
         
-        if(cmd.getName().equalsIgnoreCase("mc")){
+        if(cmd.getName().equalsIgnoreCase("coupon")){
             
             if (args.length == 0){
                 sender.sendMessage(ChatColor.GREEN+"-----------------------------------------------------");
                 sender.sendMessage(ChatColor.GREEN+this.getDescription().getFullName() +" by "+this.getDescription().getAuthors());
-                sender.sendMessage(ChatColor.GREEN+ "Type /mc help for help");
-                sender.sendMessage(ChatColor.GREEN+ "Type /mc perms for permissions");
+                sender.sendMessage(ChatColor.GREEN+ "Type /coupon help for help");
+                sender.sendMessage(ChatColor.GREEN+ "Type /coupon perms for permissions");
                 sender.sendMessage(ChatColor.GREEN+"-----------------------------------------------------");
                 if (con == null)
                     sender.sendMessage(ChatColor.RED+"MySQL STATUS: Connection failed");
@@ -147,7 +175,7 @@ public class MineCoupon extends JavaPlugin {
                      return true;
                     }
                     else{
-                        sender.sendMessage("Use: /mc create <usage> <valid trough> <command>");
+                        sender.sendMessage("Use: /coupon create <usage> <valid trough> <command>");
                         return true;
                     }
                 }
@@ -202,9 +230,9 @@ public class MineCoupon extends JavaPlugin {
                 }
                 
                 if (args[0].equalsIgnoreCase("help")){
-                    sender.sendMessage(ChatColor.GREEN+"Apply Coupon: /mc <couponcode>");
-                    sender.sendMessage(ChatColor.GREEN+"Create Coupon: /mc create <applications> <valid_trough> <command>");
-                    sender.sendMessage(ChatColor.GREEN+"Remove Coupon: /mc remove <couponcode>");
+                    sender.sendMessage(ChatColor.GREEN+"Apply Coupon: /coupon <couponcode>");
+                    sender.sendMessage(ChatColor.GREEN+"Create Coupon: /coupon create <applications> <valid_trough> <command>");
+                    sender.sendMessage(ChatColor.GREEN+"Remove Coupon: /coupon remove <couponcode>");
                     return true;
                 }
                 
@@ -302,6 +330,7 @@ public class MineCoupon extends JavaPlugin {
        this.getConfig().addDefault("config.update.message.developementbuild", "You are using a developementbuild.");
        this.getConfig().addDefault("config.update.message.error", "Check for updates failed.");
        this.getConfig().addDefault("config.allowpluginmetrics", true);
+       this.getConfig().addDefault("config.debug", false);
        
        this.getConfig().options().copyDefaults(true);
        this.saveConfig();
