@@ -1,5 +1,5 @@
 name: MineCoupon
-version: 2.0
+version: 1.4
 description: MineCoupon provides you a powerful coupon system.
 author: Raith Thomas
 webseite: http://www.rcraft.at
@@ -7,6 +7,6 @@ webseite: http://www.rcraft.at
 main: at.rcraft.minecoupon.MineCoupon
 
 commands:
-    coupon:
+    mc:
         description: 'Main command of MineCoupon'
-        usage: 'Usage: /coupon <cuponcode> (<action> <args>)'
+        usage: 'Usage: /mc <cuponcode> (<action> <args>)'
