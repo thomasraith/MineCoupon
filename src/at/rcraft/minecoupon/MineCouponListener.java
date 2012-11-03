@@ -5,7 +5,9 @@
 package at.rcraft.minecoupon;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.bukkit.ChatColor;
@@ -42,45 +44,61 @@ public class MineCouponListener implements Listener {
         System.out.println("[MineCoupon] Check for updates ...");   
         
         PluginDescriptionFile descFile = plugin.getDescription();
-        URL url = null;
-        BufferedInputStream bufferedInput = null;
-        byte[] buffer = new byte[1024];
         try {
-        url = new URL("http://rcraft.at/plugins/minecoupon/VERSION");
-        } catch (MalformedURLException ex) {
-            System.out.println("[MineCoupon] Check for updates failed.");
-            player.sendMessage(ChatColor.RED+"[MineCoupon] " + plugin.getConfig().getString("config.update.message.error"));
-        }
-        try 
-        {
-            bufferedInput = new BufferedInputStream(url.openStream());
-            int bytesRead = 0;
-             while ((bytesRead = bufferedInput.read(buffer)) != -1) {
-                
-                String version= new String(buffer, 0, bytesRead);
-                if (Float.valueOf(version) > Float.valueOf(descFile.getVersion()))
-                {
-                    player.sendMessage(ChatColor.GOLD+"[MineCoupon] " + plugin.getConfig().getString("config.update.message.newupdate"));
-                    System.out.println("[MineCoupon] A newer Version is available.");
-                }
-                else{
-                    if (version.equals(descFile.getVersion())){
-                        player.sendMessage(ChatColor.GREEN+"[MineCoupon] " + plugin.getConfig().getString("config.update.message.noupdate"));
-                        System.out.println("[MineCoupon] Measurement Tools is up to date.");
-                    }
-                    else{
-                        player.sendMessage(ChatColor.RED+"[MineCoupon] " + plugin.getConfig().getString("config.update.message.developementbuild"));
-                        System.out.println("[MineCoupon] You are using a developementbuild."); 
-                    }
-                }
-             }
-                bufferedInput.close();
+            String[] version_message;
+            version_message = read("http://rcraft.at/plugins/minecoupon/VERSION_MESSAGES/"+descFile.getVersion());
             
-        } 
-        catch (IOException ex) 
+            for (int i = 0; i < 25; i++) {
+                if (version_message[i] != null) {
+                    System.out.println(version_message[i].split(";;;;")[1]);
+                    
+                    if (version_message[i].split(";;;;")[0].equals("RED")){
+                        player.sendMessage(ChatColor.RED + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("GREEN")){
+                        player.sendMessage(ChatColor.GREEN + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("BLUE")){
+                        player.sendMessage(ChatColor.BLUE + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("YELLOW")){
+                        player.sendMessage(ChatColor.YELLOW + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("WHITE")){
+                        player.sendMessage(ChatColor.WHITE + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("GOLD")){
+                        player.sendMessage(ChatColor.GOLD + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("GRAY")){
+                        player.sendMessage(ChatColor.GRAY + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("DARK_RED")){
+                        player.sendMessage(ChatColor.DARK_RED + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("DARK_BLUE")){
+                        player.sendMessage(ChatColor.DARK_BLUE + version_message[i].split(";;;;")[1]);
+                    }
+                    
+                    if (version_message[i].split(";;;;")[0].equals("DARK_PURPLE")){
+                        player.sendMessage(ChatColor.DARK_PURPLE + version_message[i].split(";;;;")[1]);
+                    }
+                }
+            }
+            
+        }
+        catch(Exception e)
         {
-            System.out.println("[MineCoupon] Check for updates failed!");
-            player.sendMessage(ChatColor.RED+"[MineCoupon] " + plugin.getConfig().getString("config.update.message.error"));
+           System.out.println("[MineCoupon] Check for updates failed.");
+           player.sendMessage(ChatColor.RED+"[MineCoupon] " + plugin.getConfig().getString("config.update.message.error"));
         }
     }
     
@@ -90,6 +108,20 @@ public class MineCouponListener implements Listener {
             return true;
         }
         return false;
+    }
+    
+    public static String[] read(String url) throws Exception
+    {
+        URL url1 = new URL(url);
+        BufferedReader br1 = new BufferedReader(new InputStreamReader(url1.openStream()));
+        String[] version_message = new String[25];
+        String temp_string = "";
+        int i = 0;
+        while ((temp_string = br1.readLine()) != null) {
+            version_message[i] = temp_string;
+            i++;
+        }
+        return version_message;
     }
     
 }
