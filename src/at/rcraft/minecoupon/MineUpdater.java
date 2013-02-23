@@ -170,7 +170,7 @@ public class MineUpdater {
         connect_to_bukkit();
         get_recommended_download();
         downloadPlugin(sender);
-        plugin.getServer().reload();
+        System.out.println("Server require a reload in order to update MineCoupon, unloading MineCoupon now.");
         unload_mineupdater();
     }
     
