@@ -1,4 +1,4 @@
-package at.rcraft.minecoupon;
+package com.xtrsource.minecoupon;
 
 /*
 * Copyright 2011 Tyler Blair. All rights reserved.

@@ -4,7 +4,7 @@ description: MineCoupon provides you a powerful coupon system.
 author: Raith Thomas
 webseite: http://www.xtrsource.com
 
-main: at.rcraft.minecoupon.MineCoupon
+main: com.xtrsource.minecoupon.MineCoupon
 
 commands:
     coupon:

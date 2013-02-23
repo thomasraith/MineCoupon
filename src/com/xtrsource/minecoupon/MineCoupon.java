@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.rcraft.minecoupon;
+package com.xtrsource.minecoupon;
 
-import at.rcraft.minecoupon.Metrics.Graph;
+import com.xtrsource.minecoupon.Metrics.Graph;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -180,7 +180,9 @@ public class MineCoupon extends JavaPlugin {
                     
                     if (args.length == 5 || args.length == 6)
                     {
-                    
+                        if (this.getConfig().getBoolean("config.debug")){
+                            System.out.println("[MineCoupon - DEBUG] Coupon generation: Check permission");
+                        }
                     if(sender instanceof Player){
                         if(!permCheck((Player)sender, "minecoupon.create")){
                          sender.sendMessage(ChatColor.RED+ this.getConfig().getString("config.errormessages.nopermission"));
@@ -190,9 +192,17 @@ public class MineCoupon extends JavaPlugin {
                 
                      try {
                          
+                         if (this.getConfig().getBoolean("config.debug")){
+                            System.out.println("[MineCoupon - DEBUG] Coupon generation: Set current time");
+                         }
+                         
                          long time_expire = System.currentTimeMillis() / 1000;
                          String[ ] zahl;
                          String code;
+                         
+                         if (this.getConfig().getBoolean("config.debug")){
+                            System.out.println("[MineCoupon - DEBUG] Coupon generation: Generate/Set code");
+                        }
                          
                          if (args.length == 5) {
                              code = generateCouponCode(this.getConfig().getInt("config.cuponcode.length"), this.getConfig().getString("config.cuponcode.allowedchars"));
@@ -205,6 +215,10 @@ public class MineCoupon extends JavaPlugin {
                                  sender.sendMessage(ChatColor.RED + this.getConfig().getString("config.errormessages.codealreadyinuse").replace("%code%", args[5]));
                                  return true;
                              }
+                         }
+                         
+                         if (this.getConfig().getBoolean("config.debug")){
+                            System.out.println("[MineCoupon - DEBUG] Coupon generation: add validity period");
                          }
                          
                          if (args[2].endsWith("seconds") || args[2].endsWith("second") || args[2].endsWith("sec")){
@@ -249,6 +263,11 @@ public class MineCoupon extends JavaPlugin {
                                 return true;
                             }
                          }
+                         
+                         if (this.getConfig().getBoolean("config.debug")){
+                            System.out.println("[MineCoupon - DEBUG] Coupon generation: Write date to database");
+                         }
+                         
                          if(this.getConfig().getString("config.datebase").equalsIgnoreCase("mysql")) {
                             stmt.execute("INSERT INTO `minecoupon` (`ID`, `voucher_code`, `usage_left`, `valid_through`, `command`, `multible_use`) VALUES (NULL, '"+code+"', '"+args[1]+"', '"+time_expire+"', '"+args[3].replace('?', ' ')+"', "+multible_use+");");
                          }
@@ -256,6 +275,11 @@ public class MineCoupon extends JavaPlugin {
                                 res= stmt.executeQuery("SELECT COUNT( * ) ID FROM minecoupon");
                                 stmt.execute("insert into minecoupon (ID, voucher_code, usage_left, valid_through, command, multible_use, used_by) values ("+ (res.getInt("ID")+1) +", '"+code+"', '"+args[1]+"', '"+time_expire+"', '"+args[3].replace('?', ' ')+"', "+multible_use+", ';');");
                          }
+                         
+                         if (this.getConfig().getBoolean("config.debug")){
+                            System.out.println("[MineCoupon - DEBUG] Coupon generation: Data is wirtten to database");
+                         }
+                         
                          sender.sendMessage(ChatColor.GREEN+ this.getConfig().getString("config.messages.coupongenerated") +" "+code);
                      } catch (SQLException ex) {
                         sender.sendMessage(ChatColor.RED+ this.getConfig().getString("config.errormessages.coupongenerateerror"));

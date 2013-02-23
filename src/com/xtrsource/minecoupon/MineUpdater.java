@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package at.rcraft.minecoupon;
+package com.xtrsource.minecoupon;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -170,8 +170,9 @@ public class MineUpdater {
         connect_to_bukkit();
         get_recommended_download();
         downloadPlugin(sender);
-        plugin.getServer().reload();
+        System.out.println("[MineUpdater] Server require a reload in order to update MineCoupon, unloading MineCoupon now.");
         unload_mineupdater();
+        plugin.getPluginLoader().disablePlugin(plugin);
     }
     
     private static String[] read_from_web(URL url) throws Exception
