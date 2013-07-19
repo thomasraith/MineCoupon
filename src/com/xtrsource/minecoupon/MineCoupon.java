@@ -634,11 +634,12 @@ public class MineCoupon extends JavaPlugin {
                 res.close();
                 return true;
             }
-            else {
-                res.close();
-                return false;
-            }
+            
+            
         }
+        
+        res.close();
+        return false;
         }
         catch (Exception e) {
             
